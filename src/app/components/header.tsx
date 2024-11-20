@@ -11,16 +11,18 @@ export default function Header() {
       </div>
       
       <nav className="space-x-8 text-lg">
-        <Link href="/" className="text-yellow-600 hover:text-yellow-500">
+        <Link href="/" className="text-white hover:text-yellow-600">
           Home
         </Link>
         <Link href="home/about" className="text-white hover:text-yellow-600">
           About
         </Link>
-        <Link href="/services" className="text-white hover:text-yellow-600">
+        <Link href="home/service" className="text-white hover:text-yellow-600">
           Services
         </Link>
       </nav>
+
+      
 
       <div className="space-x-4">
         <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
