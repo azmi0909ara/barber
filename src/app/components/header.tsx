@@ -25,13 +25,16 @@ export default function Header() {
       
 
       <div className="space-x-4">
-        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-          BOOKING NOW
-        </button>
-        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-          OUR ORDER
-        </button>
-      </div>
+       <Link href="/"></Link>
+        <Link href="home/booking">
+    <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+      BOOKING NOW
+    </button>
+  </Link>
+  <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+    OUR ORDER
+  </button>
+</div>
     </header>
   );
 }

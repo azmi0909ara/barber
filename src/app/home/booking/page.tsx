@@ -1,26 +1,49 @@
 "use client"; // Tambahkan ini di bagian atas file
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Untuk navigasi ke halaman Home
 
 export default function Reservation() {
+  const router = useRouter(); // Inisialisasi router
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
-    service: "Grooming",
     date: "",
     time: "",
   });
+  const [services, setServices] = useState(["Grooming"]); // Default layanan
+  const [success, setSuccess] = useState(false); // Untuk menampilkan pesan sukses
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const addService = () => {
+    setServices([...services, ""]);
+  };
+
+  const removeService = (index: number) => {
+    const updatedServices = services.filter((_, i) => i !== index);
+    setServices(updatedServices);
+  };
+
+  const updateService = (index: number, value: string) => {
+    const updatedServices = [...services];
+    updatedServices[index] = value;
+    setServices(updatedServices);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(`Reservasi berhasil dibuat untuk ${formData.name}`);
-    console.log(formData); // Log data reservasi untuk keperluan debugging
+    setSuccess(true); // Tampilkan pesan sukses
+
+    // Navigasi ke halaman Home setelah 3 detik
+    setTimeout(() => {
+      setSuccess(false); // Sembunyikan pesan sukses
+      router.push("/"); // Navigasi ke Home
+    }, 3000);
   };
 
   return (
@@ -37,12 +60,29 @@ export default function Reservation() {
 
       {/* Content */}
       <div className="relative min-h-screen flex items-center justify-center py-10">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-10">
-          <h2 className="text-2xl font-bold text-center mb-6">Reservasi Barbershop</h2>
+        <div
+          className="p-8 rounded-lg shadow-lg w-full max-w-md z-10"
+          style={{
+            background: "rgba(26, 19, 16, 0.85)", // Warna latar semi-transparan
+            backdropFilter: "blur(8px)", // Efek blur
+            border: "1px solid rgba(255, 255, 255, 0.1)", // Border halus
+          }}
+        >
+          <h2 className="text-2xl font-bold text-center text-white mb-6">
+            Reservasi Barbershop
+          </h2>
+          {success && (
+            <div className="mb-4 p-4 bg-green-600 text-white text-center rounded-lg">
+              Reservasi Telah Dibuat! Anda akan diarahkan ke Home...
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Nama Lengkap
               </label>
               <input
@@ -52,13 +92,16 @@ export default function Reservation() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
             </div>
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Nomor Telepon
               </label>
               <input
@@ -68,13 +111,16 @@ export default function Reservation() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Email
               </label>
               <input
@@ -84,35 +130,60 @@ export default function Reservation() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
             </div>
 
-            {/* Service */}
+            {/* Services */}
             <div>
-              <label htmlFor="service" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="services"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Pilih Layanan
               </label>
-              <select
-                id="service"
-                name="service"
-                value={formData.service}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+              {services.map((service, index) => (
+                <div key={index} className="flex space-x-2 mt-2">
+                  <select
+                    value={service}
+                    onChange={(e) => updateService(index, e.target.value)}
+                    required
+                    className="block w-full p-2 bg-black border border-gray-600 rounded-lg shadow-sm text-white"
+                  >
+                    <option value="" disabled hidden>
+                      Pilih Layanan
+                    </option>
+                    <option value="Grooming">Grooming</option>
+                    <option value="Hair Straightening">Hair Straightening</option>
+                    <option value="Hair Spa">Hair Spa</option>
+                    <option value="Waxing">Waxing</option>
+                    <option value="Hot Towel Service">Hot Towel Service</option>
+                    <option value="Hair Coloring">Hair Coloring</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => removeService(index)}
+                    className="bg-red-600 text-white px-3 rounded-lg hover:bg-red-700"
+                  >
+                    Hapus
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addService}
+                className="mt-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700"
               >
-                <option value="Grooming">Grooming</option>
-                <option value="Hair Straightening">Hair Straightening</option>
-                <option value="Hair Spa">Hair Spa</option>
-                <option value="Waxing">Waxing</option>
-                <option value="Hot Towel Service">Hot Towel Service</option>
-                <option value="Hair Coloring">Hair Coloring</option>
-              </select>
+                Tambah Layanan
+              </button>
             </div>
 
             {/* Date */}
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Tanggal Reservasi
               </label>
               <input
@@ -122,13 +193,16 @@ export default function Reservation() {
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
             </div>
 
             {/* Time */}
             <div>
-              <label htmlFor="time" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="time"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Waktu Reservasi
               </label>
               <input
@@ -138,7 +212,7 @@ export default function Reservation() {
                 value={formData.time}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
             </div>
 
