@@ -1,6 +1,30 @@
-import Link from 'next/link';
+"use client";
 
-export default function Header() {
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { User as FirebaseUser, signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../../firebase';
+import AuthModal from './AuthModal';
+
+export default function Header(): JSX.Element {
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error('Sign out failed:', err);
+    }
+  };
+
   return (
     <header className="absolute top-0 left-0 right-0 flex justify-between items-center px-10 py-6 z-50">
       <div className="flex items-center space-x-3">
@@ -25,16 +49,13 @@ export default function Header() {
       
 
       <div className="space-x-4">
-       <Link href="/"></Link>
-        <Link href="home/booking">
-    <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-      BOOKING NOW
-    </button>
-  </Link>
-  <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-    OUR ORDER
-  </button>
-</div>
+        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+          BOOKING NOW
+        </button>
+        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+          OUR ORDER
+        </button>
+      </div>
     </header>
   );
 }
