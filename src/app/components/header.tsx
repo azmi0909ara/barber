@@ -56,16 +56,16 @@ export default function Header(): JSX.Element {
         {user ? (
           <button
             onClick={handleSignOut}
-            className="bg-red-600 text-white px-6 py-2 font-semibold rounded hover:bg-red-500"
+            className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500"
           >
-            Logout
+            LOGOUT
           </button>
         ) : (
           <button
             onClick={() => setIsAuthOpen(true)}
-            className="bg-green-600 text-white px-6 py-2 font-semibold rounded hover:bg-green-500"
+            className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500"
           >
-            Login
+            LOGIN
           </button>
         )}
       </div>
