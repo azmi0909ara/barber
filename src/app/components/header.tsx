@@ -46,16 +46,31 @@ export default function Header(): JSX.Element {
         </Link>
       </nav>
 
-      
-
-      <div className="space-x-4">
+      <div className="flex items-center space-x-4">
         <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
           BOOKING NOW
         </button>
         <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
           OUR ORDER
         </button>
+        {user ? (
+          <button
+            onClick={handleSignOut}
+            className="bg-red-600 text-white px-6 py-2 font-semibold rounded hover:bg-red-500"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsAuthOpen(true)}
+            className="bg-green-600 text-white px-6 py-2 font-semibold rounded hover:bg-green-500"
+          >
+            Login
+          </button>
+        )}
       </div>
+
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </header>
   );
 }

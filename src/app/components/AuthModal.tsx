@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { 
   signInWithEmailAndPassword, 
   signInWithPopup, 
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   AuthError
 } from 'firebase/auth';
@@ -18,18 +19,23 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps): JSX.Elem
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleEmailAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if (isRegistering) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
       onClose();
       setEmail('');
       setPassword('');
       setError('');
     } catch (err) {
       const authError = err as AuthError;
-      setError(authError.message || 'Invalid email or password');
+      setError(authError.message || 'Authentication failed');
     }
   };
 
@@ -50,7 +56,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps): JSX.Elem
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-md w-full">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Sign In</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            {isRegistering ? 'Register' : 'Sign In'}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -66,7 +74,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps): JSX.Elem
           </div>
         )}
 
-        <form onSubmit={handleEmailLogin} className="space-y-4">
+        <form onSubmit={handleEmailAuth} className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-2">Email</label>
             <input
@@ -91,7 +99,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps): JSX.Elem
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           >
-            Sign in with Email
+            {isRegistering ? 'Register with Email' : 'Sign in with Email'}
           </button>
         </form>
 
@@ -120,6 +128,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps): JSX.Elem
               />
             </svg>
             Sign in with Google
+          </button>
+        </div>
+
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => setIsRegistering(!isRegistering)}
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
+            {isRegistering 
+              ? 'Already have an account? Sign in' 
+              : 'Need an account? Register'}
           </button>
         </div>
       </div>
