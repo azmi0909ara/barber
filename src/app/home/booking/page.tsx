@@ -1,6 +1,6 @@
 "use client"; // Tambahkan ini di bagian atas file
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Untuk navigasi ke halaman Home
 
 export default function Reservation() {
@@ -14,6 +14,30 @@ export default function Reservation() {
   });
   const [services, setServices] = useState(["Grooming"]); // Default layanan
   const [success, setSuccess] = useState(false); // Untuk menampilkan pesan sukses
+  const [totalPrice, setTotalPrice] = useState<number>(0); // Untuk menyimpan total harga
+
+  // Harga per layanan
+  const servicePrices: { [key: string]: number } = {
+    Grooming: 75000,
+    "Hair Straightening": 50000,
+    "Hair Spa": 50000,
+    Waxing: 35000,
+    "Hot Towel Service": 20000,
+    "Hair Coloring": 125000,
+  };
+
+  // Menghitung total harga berdasarkan layanan yang dipilih
+  const calculateTotalPrice = () => {
+    return services.reduce((total, service) => {
+      return total + (servicePrices[service] || 0);
+    }, 0);
+  };
+
+  // Mengupdate total harga hanya di sisi klien
+  useEffect(() => {
+    const calculatedPrice = calculateTotalPrice();
+    setTotalPrice(calculatedPrice);
+  }, [services]); // Akan dihitung ulang setiap kali layanan berubah
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -214,6 +238,11 @@ export default function Reservation() {
                 required
                 className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
               />
+            </div>
+
+            {/* Total Price */}
+            <div className="mt-4 text-white text-lg">
+              <p>Total Harga: Rp {totalPrice.toLocaleString()}</p>
             </div>
 
             {/* Submit Button */}

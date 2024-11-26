@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import Link from 'next/link';  // Import Link
 import { User as FirebaseUser, signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import AuthModal from './AuthModal';
@@ -47,12 +47,16 @@ export default function Header(): JSX.Element {
       </nav>
 
       <div className="flex items-center space-x-4">
-        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-          BOOKING NOW
-        </button>
+        <Link href="/home/booking">
+          <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+            BOOKING NOW
+          </button>
+        </Link>
+
         <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
           OUR ORDER
         </button>
+
         {user ? (
           <button
             onClick={handleSignOut}

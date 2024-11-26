@@ -7,7 +7,8 @@ import {
   GoogleAuthProvider,
   AuthError,
 } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { firestore, auth } from "../../../firebase"; // Import Firestore db
+import { doc, setDoc, getDoc } from "firebase/firestore"; // Import Firestore methods
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,26 @@ interface AuthModalProps {
 }
 
 const googleProvider = new GoogleAuthProvider();
+
+// Fungsi untuk membuat dokumen pengguna di Firestore
+const createUserDocument = async (user: any, additionalData: any) => {
+  if (!user) return;
+  const userRef = doc(firestore, "users", user.uid);
+  const snapshot = await getDoc(userRef);
+
+  if (!snapshot.exists()) {
+    try {
+      await setDoc(userRef, {
+        displayName: user.displayName,
+        email: user.email,
+        createdAt: new Date(),
+        ...additionalData,
+      });
+    } catch (error) {
+      console.error("Error creating user document:", error);
+    }
+  }
+};
 
 export default function AuthModal({
   isOpen,
@@ -45,6 +66,9 @@ export default function AuthModal({
         await updateProfile(userCredential.user, {
           displayName: username,
         });
+
+        // Save user data to Firestore
+        await createUserDocument(userCredential.user, { registrationType: "email" });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -58,7 +82,12 @@ export default function AuthModal({
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+
+      // Create user document in Firestore (if not already created)
+      await createUserDocument(user, { registrationType: "google" });
+
       onClose();
       resetForm();
     } catch (err) {

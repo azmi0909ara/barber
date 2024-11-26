@@ -1,6 +1,9 @@
+// firebase.ts
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA57D78rdd5x_RCNQT1EhBtuBdrdbFodLs",
   authDomain: "barber-15b48.firebaseapp.com",
@@ -11,5 +14,11 @@ const firebaseConfig = {
   measurementId: "G-0KZEYZWEFL"
 };
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Getting Auth and Firestore Instances
+const auth = getAuth(app);
+const firestore = getFirestore(app); // Firestore instance is named "firestore"
+
+export { firestore, auth }; // Export firestore and auth
