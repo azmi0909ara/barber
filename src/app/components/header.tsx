@@ -10,6 +10,7 @@ export default function Header(): JSX.Element {
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
 
+  // Menggunakan useEffect untuk memantau perubahan status autentikasi
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -47,8 +48,11 @@ export default function Header(): JSX.Element {
       </nav>
 
       <div className="flex items-center space-x-4">
-        <Link href="/home/booking">
-          <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+        <Link href={user ? "/home/booking" : "#"}>
+          <button
+            className={`bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500 ${user ? '' : 'cursor-not-allowed opacity-50'}`}
+            disabled={!user} // Nonaktifkan tombol jika user belum login
+          >
             BOOKING NOW
           </button>
         </Link>

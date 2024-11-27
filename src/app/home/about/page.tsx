@@ -14,11 +14,15 @@ export default function About() {
           </section>
 
           {/* About Section */}
-          <section className="py-16 px-10">
+          <section className="py-7 px-10">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="relative">
-                {/* Placeholder for image */}
-                <div className="w-full h-80 bg-yellow-600 rounded-lg"></div>
+                {/* Replace the placeholder with an actual image */}
+                <img
+                  src="/images/barber.jpg" // Replace with your actual image path
+                  alt="Company"
+                  className="w-full h-80 object-cover rounded-lg"
+                />
               </div>
               <div className="flex flex-col justify-center space-y-4">
                 <h2 className="text-xl font-semibold text-yellow-600">
@@ -28,7 +32,7 @@ export default function About() {
                 <p className="text-gray-300">
                   Ini adalah website barbershop dimana customer dapat menerima
                   service pemotongan rambut sesuai pesanan customer yang kami
-                  cintai
+                  cintai.
                 </p>
                 <p className="text-gray-300">
                   Terima kasih dan semoga kalian semua nyaman dengan pelayanan

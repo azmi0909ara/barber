@@ -151,34 +151,54 @@ export default function Reservation() {
                 Tanggal Reservasi
               </label>
               <input
-                type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-              />
+  type="date"
+  id="date"
+  name="date"
+  value={formData.date}
+  onChange={handleChange}
+  min={new Date().toISOString().split("T")[0]} // Restrict date selection to today or future
+  required
+  className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
+/>
             </div>
 
             {/* Time */}
             <div>
-              <label
-                htmlFor="time"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Waktu Reservasi
-              </label>
-              <input
-                type="time"
-                id="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-              />
-            </div>
+  <label
+    htmlFor="time"
+    className="block text-sm font-medium text-gray-300"
+  >
+    Waktu Reservasi
+  </label>
+  <select
+    id="time"
+    name="time"
+    value={formData.time}
+    onChange={handleChange}
+    required
+    className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
+  >
+    <option value="" disabled hidden>
+      Pilih Waktu
+    </option>
+    {/* Loop through the hours and minutes */}
+    {Array.from({ length: 27 }, (_, i) => {
+      const hour = Math.floor(i / 2) + 9; // Start at 09:00
+      const minute = (i % 2) === 0 ? "00" : "30"; // Alternate between 00 and 30 minutes
+      const timeString = `${hour.toString().padStart(2, "0")}:${minute}`;
+      return (
+        <option
+          key={timeString}
+          value={timeString}
+          className="bg-black text-white"
+        >
+          {timeString}
+        </option>
+      );
+    })}
+  </select>
+</div>
+
 
             {/* Total Price */}
             <div className="mt-4 text-white text-lg">
