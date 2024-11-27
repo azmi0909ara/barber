@@ -9,6 +9,8 @@ import {
 } from "firebase/auth";
 import { firestore, auth } from "../../../firebase"; // Import Firestore db
 import { doc, setDoc, getDoc } from "firebase/firestore"; // Import Firestore methods
+import { useRouter } from "next/navigation"; // Import useRouter for redirection
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -47,6 +49,8 @@ export default function AuthModal({
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
+  const router = useRouter(); // Initialize useRouter for navigation
+
 
   const handleEmailAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,11 +73,14 @@ export default function AuthModal({
 
         // Save user data to Firestore
         await createUserDocument(userCredential.user, { registrationType: "email" });
+
+        router.push("/biodata");
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
       onClose();
       resetForm();
+      router.push("/biodata");
     } catch (err) {
       const authError = err as AuthError;
       setError(authError.message || "Authentication failed");
@@ -90,6 +97,8 @@ export default function AuthModal({
 
       onClose();
       resetForm();
+
+      router.push("/biodata");
     } catch (err) {
       const authError = err as AuthError;
       setError(authError.message || "Google sign-in failed");

@@ -6,9 +6,6 @@ import { useRouter } from "next/navigation"; // Untuk navigasi ke halaman Home
 export default function Reservation() {
   const router = useRouter(); // Inisialisasi router
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
     date: "",
     time: "",
   });
@@ -101,63 +98,6 @@ export default function Reservation() {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Nama Lengkap
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-              />
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Nomor Telepon
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-              />
-            </div>
-
             {/* Services */}
             <div>
               <label
