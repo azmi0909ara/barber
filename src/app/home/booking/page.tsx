@@ -2,28 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { initializeApp, getApp, FirebaseApp } from "firebase/app"; // Import getApp
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-
-// Firebase configuration (replace with your actual Firebase config)
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
-
-// Initialize Firebase (only if it hasn't been initialized)
-let app: FirebaseApp;
-if (!getApp()) {
-  app = initializeApp(firebaseConfig);  // Initialize only once
-} else {
-  app = getApp(); // Use the existing Firebase app
-}
-
-const db = getFirestore(app);
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase"; // Import db from firebase.ts
 
 export default function Reservation() {
   const router = useRouter();
@@ -90,12 +70,12 @@ export default function Reservation() {
         date: formData.date,
         time: formData.time,
         totalPrice: totalPrice,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       };
 
       // Add a new document with a generated id
       const docRef = await addDoc(collection(db, "reservations"), reservationData);
-      
+
       // Show success message
       setSuccess(true);
 
