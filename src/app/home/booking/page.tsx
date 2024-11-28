@@ -1,17 +1,40 @@
-"use client"; // Tambahkan ini di bagian atas file
+"use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Untuk navigasi ke halaman Home
+import { useRouter } from "next/navigation";
+import { initializeApp, getApp, FirebaseApp } from "firebase/app"; // Import getApp
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+// Firebase configuration (replace with your actual Firebase config)
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+};
+
+// Initialize Firebase (only if it hasn't been initialized)
+let app: FirebaseApp;
+if (!getApp()) {
+  app = initializeApp(firebaseConfig);  // Initialize only once
+} else {
+  app = getApp(); // Use the existing Firebase app
+}
+
+const db = getFirestore(app);
 
 export default function Reservation() {
-  const router = useRouter(); // Inisialisasi router
+  const router = useRouter();
   const [formData, setFormData] = useState({
     date: "",
     time: "",
   });
-  const [services, setServices] = useState(["Grooming"]); // Default layanan
-  const [success, setSuccess] = useState(false); // Untuk menampilkan pesan sukses
-  const [totalPrice, setTotalPrice] = useState<number>(0); // Untuk menyimpan total harga
+  const [services, setServices] = useState(["Grooming"]);
+  const [success, setSuccess] = useState(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
 
   // Harga per layanan
   const servicePrices: { [key: string]: number } = {
@@ -34,7 +57,7 @@ export default function Reservation() {
   useEffect(() => {
     const calculatedPrice = calculateTotalPrice();
     setTotalPrice(calculatedPrice);
-  }, [services]); // Akan dihitung ulang setiap kali layanan berubah
+  }, [services]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,15 +79,38 @@ export default function Reservation() {
     setServices(updatedServices);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSuccess(true); // Tampilkan pesan sukses
+    setLoading(true);
 
-    // Navigasi ke halaman Home setelah 3 detik
-    setTimeout(() => {
-      setSuccess(false); // Sembunyikan pesan sukses
-      router.push("/"); // Navigasi ke Home
-    }, 3000);
+    try {
+      // Save reservation to Firestore
+      const reservationData = {
+        services: services,
+        date: formData.date,
+        time: formData.time,
+        totalPrice: totalPrice,
+        createdAt: serverTimestamp()
+      };
+
+      // Add a new document with a generated id
+      const docRef = await addDoc(collection(db, "reservations"), reservationData);
+      
+      // Show success message
+      setSuccess(true);
+
+      // Navigate to home page after 3 seconds
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/");
+      }, 3000);
+    } catch (error) {
+      console.error("Error saving reservation: ", error);
+      // Optionally, show an error message to the user
+      alert("Gagal membuat reservasi. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,9 +130,9 @@ export default function Reservation() {
         <div
           className="p-8 rounded-lg shadow-lg w-full max-w-md z-10"
           style={{
-            background: "rgba(26, 19, 16, 0.85)", // Warna latar semi-transparan
-            backdropFilter: "blur(8px)", // Efek blur
-            border: "1px solid rgba(255, 255, 255, 0.1)", // Border halus
+            background: "rgba(26, 19, 16, 0.85)", 
+            backdropFilter: "blur(8px)", 
+            border: "1px solid rgba(255, 255, 255, 0.1)", 
           }}
         >
           <h2 className="text-2xl font-bold text-center text-white mb-6">
@@ -151,54 +197,52 @@ export default function Reservation() {
                 Tanggal Reservasi
               </label>
               <input
-  type="date"
-  id="date"
-  name="date"
-  value={formData.date}
-  onChange={handleChange}
-  min={new Date().toISOString().split("T")[0]} // Restrict date selection to today or future
-  required
-  className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-/>
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                min={new Date().toISOString().split("T")[0]}
+                required
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
+              />
             </div>
 
             {/* Time */}
             <div>
-  <label
-    htmlFor="time"
-    className="block text-sm font-medium text-gray-300"
-  >
-    Waktu Reservasi
-  </label>
-  <select
-    id="time"
-    name="time"
-    value={formData.time}
-    onChange={handleChange}
-    required
-    className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
-  >
-    <option value="" disabled hidden>
-      Pilih Waktu
-    </option>
-    {/* Loop through the hours and minutes */}
-    {Array.from({ length: 27 }, (_, i) => {
-      const hour = Math.floor(i / 2) + 9; // Start at 09:00
-      const minute = (i % 2) === 0 ? "00" : "30"; // Alternate between 00 and 30 minutes
-      const timeString = `${hour.toString().padStart(2, "0")}:${minute}`;
-      return (
-        <option
-          key={timeString}
-          value={timeString}
-          className="bg-black text-white"
-        >
-          {timeString}
-        </option>
-      );
-    })}
-  </select>
-</div>
-
+              <label
+                htmlFor="time"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Waktu Reservasi
+              </label>
+              <select
+                id="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
+              >
+                <option value="" disabled hidden>
+                  Pilih Waktu
+                </option>
+                {Array.from({ length: 27 }, (_, i) => {
+                  const hour = Math.floor(i / 2) + 9;
+                  const minute = (i % 2) === 0 ? "00" : "30";
+                  const timeString = `${hour.toString().padStart(2, "0")}:${minute}`;
+                  return (
+                    <option
+                      key={timeString}
+                      value={timeString}
+                      className="bg-black text-white"
+                    >
+                      {timeString}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
 
             {/* Total Price */}
             <div className="mt-4 text-white text-lg">
@@ -208,9 +252,14 @@ export default function Reservation() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-yellow-600 text-white py-2 rounded-lg shadow-lg hover:bg-yellow-700 transition"
+              disabled={loading}
+              className={`w-full text-white py-2 rounded-lg shadow-lg transition ${
+                loading 
+                  ? "bg-gray-500 cursor-not-allowed" 
+                  : "bg-yellow-600 hover:bg-yellow-700"
+              }`}
             >
-              Buat Reservasi
+              {loading ? "Memproses..." : "Buat Reservasi"}
             </button>
           </form>
         </div>
