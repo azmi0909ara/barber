@@ -39,7 +39,7 @@ export default function Header(): JSX.Element {
         <Link href="/" className="text-white hover:text-yellow-600">
           Home
         </Link>
-        <Link href="home/about" className="text-white hover:text-yellow-600">
+        <Link href="/about" className="text-white hover:text-yellow-600">
           About
         </Link>
         <Link href="/service" className="text-white hover:text-yellow-600">
