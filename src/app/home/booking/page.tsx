@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase"; // Import db from firebase.ts
+import { db } from "../../../../firebase"; // Import db from firebase.ts
 
 export default function Reservation() {
   const router = useRouter();

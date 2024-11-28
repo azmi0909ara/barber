@@ -2,14 +2,14 @@
 "use client";  // Menandakan komponen ini dijalankan di sisi klien
 
 import { useEffect, useState } from "react";
-import { db } from "../../firebase"; // Mengimpor konfigurasi Firebase dari file firebase.ts
+import { db } from "../../../firebase"; // Mengimpor konfigurasi Firebase dari file firebase.ts
 import { collection, getDocs } from "firebase/firestore"; // Import fungsi untuk mengambil data dari Firestore
 
 interface User {
   id: string;
-  name: string;
+  displayName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
 }
 
 const AdminMember: React.FC = () => {
@@ -60,7 +60,7 @@ const AdminMember: React.FC = () => {
           <div className="bg-white p-4 rounded-lg shadow-lg space-y-4">
             <table className="w-full text-left table-auto">
               <thead>
-                <tr className="bg-gray-800 text-white">
+                <tr className="bg-yellow-600 text-black">
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Email</th>
                   <th className="px-4 py-2">Phone</th>
@@ -68,10 +68,10 @@ const AdminMember: React.FC = () => {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-300">
-                    <td className="px-4 py-2">{user.name}</td>
+                  <tr key={user.id} className="bbg-white p-4 text-black">
+                    <td className="px-4 py-2">{user.displayName}</td>
                     <td className="px-4 py-2">{user.email}</td>
-                    <td className="px-4 py-2">{user.phone}</td>
+                    <td className="px-4 py-2">{user.phoneNumber}</td>
                   </tr>
                 ))}
               </tbody>
