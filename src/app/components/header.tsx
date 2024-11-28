@@ -39,7 +39,7 @@ export default function Header(): JSX.Element {
         <Link href="/" className="text-white hover:text-yellow-600">
           Home
         </Link>
-        <Link href="/about" className="text-white hover:text-yellow-600">
+        <Link href="home/about" className="text-white hover:text-yellow-600">
           About
         </Link>
         <Link href="/service" className="text-white hover:text-yellow-600">
@@ -57,9 +57,11 @@ export default function Header(): JSX.Element {
           </button>
         </Link>
 
+        <Link href={user ? "/order" : "#"}>
         <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
           OUR ORDER
         </button>
+        </Link>
 
         {user ? (
           <button

@@ -8,6 +8,7 @@ import { db } from "../../../../firebase"; // Import db from firebase.ts
 export default function Reservation() {
   const router = useRouter();
   const [formData, setFormData] = useState({
+    name: "", // Menambahkan field untuk nama lengkap
     date: "",
     time: "",
   });
@@ -66,6 +67,7 @@ export default function Reservation() {
     try {
       // Save reservation to Firestore
       const reservationData = {
+        name: formData.name, // Menambahkan nama lengkap ke data reservasi
         services: services,
         date: formData.date,
         time: formData.time,
@@ -110,9 +112,9 @@ export default function Reservation() {
         <div
           className="p-8 rounded-lg shadow-lg w-full max-w-md z-10"
           style={{
-            background: "rgba(26, 19, 16, 0.85)", 
-            backdropFilter: "blur(8px)", 
-            border: "1px solid rgba(255, 255, 255, 0.1)", 
+            background: "rgba(26, 19, 16, 0.85)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
           <h2 className="text-2xl font-bold text-center text-white mb-6">
@@ -124,6 +126,25 @@ export default function Reservation() {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Nama Lengkap */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Nama Lengkap
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-lg shadow-sm text-white"
+              />
+            </div>
+
             {/* Services */}
             <div>
               <label
@@ -234,8 +255,8 @@ export default function Reservation() {
               type="submit"
               disabled={loading}
               className={`w-full text-white py-2 rounded-lg shadow-lg transition ${
-                loading 
-                  ? "bg-gray-500 cursor-not-allowed" 
+                loading
+                  ? "bg-gray-500 cursor-not-allowed"
                   : "bg-yellow-600 hover:bg-yellow-700"
               }`}
             >

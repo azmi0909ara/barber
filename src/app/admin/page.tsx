@@ -1,3 +1,4 @@
+// components/AdminDashboard.tsx
 import React from "react";
 import Link from "next/link"; // Import Link from Next.js
 
@@ -16,7 +17,7 @@ const AdminDashboard: React.FC = () => {
       {/* Content */}
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
         {/* Card 1 - Member */}
-        <Link href="/admin/member">
+        <Link href="/member">
           <div className="flex items-center justify-between p-4 rounded-lg shadow-lg bg-yellow-500 bg-opacity-80 cursor-pointer hover:bg-yellow-600 transition">
             <div>
               <h2 className="text-4xl font-bold text-white">Member</h2>
@@ -26,7 +27,7 @@ const AdminDashboard: React.FC = () => {
         </Link>
 
         {/* Card 2 - Our Order */}
-        <Link href="/admin/our-order">
+        <Link href="/orderAdmin">
           <div className="flex items-center justify-between p-4 rounded-lg shadow-lg bg-teal-500 bg-opacity-80 cursor-pointer hover:bg-teal-600 transition">
             <div>
               <h2 className="text-4xl font-bold text-white">Our Order</h2>
