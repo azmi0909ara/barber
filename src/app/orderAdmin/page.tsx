@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../../../firebase"; // Mengimpor konfigurasi Firebase dari file firebase.ts
 import { collection, getDocs } from "firebase/firestore"; // Import fungsi untuk mengambil data dari Firestore
+import Link from "next/link";  // Import Link untuk navigasi ke halaman admin
 
 interface Reservation {
   id: string;
@@ -100,46 +101,46 @@ const AdminMember: React.FC = () => {
   
 
   return (
-    <div className="relative min-h-screen bg-gray-100">
+    <div className="relative min-h-screen bg-gray-100 flex items-center justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 bg-[#1a1310] overflow-hidden">
         <img
           src="/images/barber.jpg"
           alt="Barber cutting hair"
-          className="w-full h-screen object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 p-6">
-        <h1 className="text-4xl font-bold text-white mb-6">Reservation List</h1>
+      <div className="relative z-10 p-6 w-full max-w-4xl">
+        <h1 className="text-4xl font-bold text-white mb-6 text-center">Reservation List</h1>
 
         {loading ? (
-          <p className="text-white">Loading...</p>
+          <p className="text-white text-center">Loading...</p>
         ) : reservations.length === 0 ? (
-          <p className="text-white">No reservations found.</p>
+          <p className="text-white text-center">No reservations found.</p>
         ) : (
           <div className="bg-white p-4 rounded-lg shadow-lg space-y-4">
             <table className="w-full text-left table-auto">
               <thead>
                 <tr className="bg-yellow-600 text-black">
-                  <th className="px-4 py-2">Customer Name</th>
-                  <th className="px-4 py-2">Date</th>
-                  <th className="px-4 py-2">Time</th>
-                  <th className="px-4 py-2">Service</th>
-                  <th className="px-4 py-2">Total Price</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="px-5 py-2">Customer Name</th>
+                  <th className="px-5 py-2">Date</th>
+                  <th className="px-5 py-2">Time</th>
+                  <th className="px-5 py-2">Service</th>
+                  <th className="px-5 py-2">Total Price</th>
+                  <th className="px-5 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {reservations.map((reservation) => (
                   <tr key={reservation.id} className="bg-white p-4 text-black">
-                    <td className="px-4 py-2">{reservation.name}</td>
-                    <td className="px-4 py-2">{reservation.date}</td>
-                    <td className="px-4 py-2">{reservation.time}</td>
-                    <td className="px-4 py-2">{formatServices(reservation.services)}</td>
-                    <td className="px-4 py-2">{reservation.totalPrice}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-5 py-2">{reservation.name}</td>
+                    <td className="px-5 py-2">{reservation.date}</td>
+                    <td className="px-5 py-2">{reservation.time}</td>
+                    <td className="px-5 py-2">{formatServices(reservation.services)}</td>
+                    <td className="px-5 py-2">{reservation.totalPrice}</td>
+                    <td className="px-5 py-2">
                       <button
                         onClick={() => handlePrint(reservation)}
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -153,6 +154,15 @@ const AdminMember: React.FC = () => {
             </table>
           </div>
         )}
+
+        {/* Button to Admin Page */}
+        <div className="flex justify-end mt-6">
+          <Link href="/admin">
+            <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500 transition">
+              Back to Admin Page
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );

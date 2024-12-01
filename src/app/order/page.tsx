@@ -1,4 +1,3 @@
-// pages/admin/member.tsx
 "use client";  // Menandakan komponen ini dijalankan di sisi klien
 
 import { useEffect, useState } from "react";
@@ -48,24 +47,24 @@ const AdminMember: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gray-100">
+    <div className="relative min-h-screen bg-gray-100 flex items-center justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 bg-[#1a1310] overflow-hidden">
         <img
           src="/images/barber.jpg"
           alt="Barber cutting hair"
-          className="w-full h-screen object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 p-6">
-        <h1 className="text-4xl font-bold text-white mb-6">Reservation List</h1>
+      <div className="relative z-10 p-6 w-full max-w-4xl">
+        <h1 className="text-4xl font-bold text-white mb-6 text-center">Reservation List</h1>
 
         {loading ? (
-          <p className="text-white">Loading...</p>
+          <p className="text-white text-center">Loading...</p>
         ) : reservations.length === 0 ? (
-          <p className="text-white">No reservations found.</p>
+          <p className="text-white text-center">No reservations found.</p>
         ) : (
           <div className="bg-white p-4 rounded-lg shadow-lg space-y-4">
             <table className="w-full text-left table-auto">

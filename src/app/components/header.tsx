@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';  // Import Link
-import { User as FirebaseUser, signOut, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../firebase';
-import AuthModal from './AuthModal';
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation"; // Gunakan usePathname untuk memeriksa jalur
+import Link from "next/link";
+import { User as FirebaseUser, signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../firebase";
+import AuthModal from "./AuthModal";
 
-export default function Header(): JSX.Element {
+export default function Header(): JSX.Element | null {
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const pathname = usePathname(); // Dapatkan jalur aktif
 
   // Menggunakan useEffect untuk memantau perubahan status autentikasi
   useEffect(() => {
@@ -18,11 +20,21 @@ export default function Header(): JSX.Element {
     return () => unsubscribe();
   }, []);
 
+  // Jalur di mana header tidak ditampilkan
+  const hiddenRoutes = ["/member", "/admin", "/orderAdmin"];
+
+  // Pastikan semua hook telah dipanggil sebelum kondisi return
+  const shouldHideHeader = hiddenRoutes.includes(pathname);
+
+  if (shouldHideHeader) {
+    return null; // Tidak menampilkan header
+  }
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
     } catch (err) {
-      console.error('Sign out failed:', err);
+      console.error("Sign out failed:", err);
     }
   };
 
@@ -34,12 +46,12 @@ export default function Header(): JSX.Element {
         </div>
         <span className="text-3xl font-bold text-white">BRBER</span>
       </div>
-      
+
       <nav className="space-x-8 text-lg">
         <Link href="/" className="text-white hover:text-yellow-600">
           Home
         </Link>
-        <Link href="home/about" className="text-white hover:text-yellow-600">
+        <Link href="/about" className="text-white hover:text-yellow-600">
           About
         </Link>
         <Link href="/service" className="text-white hover:text-yellow-600">
@@ -50,17 +62,17 @@ export default function Header(): JSX.Element {
       <div className="flex items-center space-x-4">
         <Link href={user ? "/home/booking" : "#"}>
           <button
-            className={`bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500 ${user ? '' : 'cursor-not-allowed opacity-50'}`}
-            disabled={!user} // Nonaktifkan tombol jika user belum login
+            className={`bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500 ${user ? "" : "cursor-not-allowed opacity-50"}`}
+            disabled={!user}
           >
             BOOKING NOW
           </button>
         </Link>
 
         <Link href={user ? "/order" : "#"}>
-        <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
-          OUR ORDER
-        </button>
+          <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500">
+            OUR ORDER
+          </button>
         </Link>
 
         {user ? (
