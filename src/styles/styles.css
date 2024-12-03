@@ -1,0 +1,17 @@
+/* styles.css */
+
+@media print {
+    .print-only {
+      display: block !important;
+    }
+  
+    .hidden {
+      display: none !important;
+    }
+  
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  

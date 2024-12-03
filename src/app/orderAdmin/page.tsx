@@ -157,7 +157,7 @@ const AdminMember: React.FC = () => {
 
         {/* Button to Admin Page */}
         <div className="flex justify-end mt-6">
-          <Link href="/admin">
+          <Link href="/adminIsi">
             <button className="bg-yellow-600 text-black px-6 py-2 font-semibold rounded hover:bg-yellow-500 transition">
               Back to Admin Page
             </button>

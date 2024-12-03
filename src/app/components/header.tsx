@@ -21,7 +21,7 @@ export default function Header(): JSX.Element | null {
   }, []);
 
   // Jalur di mana header tidak ditampilkan
-  const hiddenRoutes = ["/member", "/admin", "/orderAdmin"];
+  const hiddenRoutes = ["/member", "/admin", "/adminIsi", "/orderAdmin"];
 
   // Pastikan semua hook telah dipanggil sebelum kondisi return
   const shouldHideHeader = hiddenRoutes.includes(pathname);

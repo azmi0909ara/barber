@@ -164,12 +164,12 @@ export default function Reservation() {
                     <option value="" disabled hidden>
                       Pilih Layanan
                     </option>
-                    <option value="Grooming">Grooming</option>
-                    <option value="Hair Straightening">Hair Straightening</option>
-                    <option value="Hair Spa">Hair Spa</option>
-                    <option value="Waxing">Waxing</option>
-                    <option value="Hot Towel Service">Hot Towel Service</option>
-                    <option value="Hair Coloring">Hair Coloring</option>
+                    <option value="Grooming">Grooming      : 75K</option>
+                    <option value="Hair Straightening">Hair Straightening     : 50K</option>
+                    <option value="Hair Spa">Hair Spa   : 50K</option>
+                    <option value="Waxing">Waxing   : 35K</option>
+                    <option value="Hot Towel Service">Hot Towel Service   : 20K</option>
+                    <option value="Hair Coloring">Hair Coloring   : 125K</option>
                   </select>
                   <button
                     type="button"
