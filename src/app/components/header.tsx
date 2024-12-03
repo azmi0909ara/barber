@@ -41,9 +41,12 @@ export default function Header(): JSX.Element | null {
   return (
     <header className="absolute top-0 left-0 right-0 flex justify-between items-center px-10 py-6 z-50">
       <div className="flex items-center space-x-3">
-        <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center">
-          <span className="text-black font-bold">B</span>
-        </div>
+        {/* Tombol menuju halaman Admin */}
+        <Link href="/admin">
+          <button className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center text-2xl text-black hover:bg-yellow-500">
+            B
+          </button>
+        </Link>
         <span className="text-3xl font-bold text-white">BRBER</span>
       </div>
 
